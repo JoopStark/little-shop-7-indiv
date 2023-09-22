@@ -59,7 +59,10 @@ RSpec.describe "the merchant show" do
       visit merchant_path(merchant_1)
   
       expect(page).to have_link('View All My Discounts')
-      expect(page).to have_current_path(merchant_discounts(merchant_1))
+
+      click_link 'View All My Discounts'
+
+      expect(page).to have_current_path(merchant_bulk_discounts_path(merchant_1))
     end
   end
 end
