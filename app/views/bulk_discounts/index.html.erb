@@ -1,0 +1,8 @@
+<h1> All Discounts </h1>
+<% @merchant.bulk_discounts.each do |discount| %>
+<%= "#{discount.name} |  
+    #{discount.discount * 100}% | 
+    minimum purchase quanity: #{discount.threshold}" %></br>
+<%end%>
+
+<h1><%= link_to 'Create New Discount', new_merchant_bulk_discount_path(@merchant) %></h1>
