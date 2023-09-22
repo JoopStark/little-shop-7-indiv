@@ -27,7 +27,7 @@ RSpec.describe "new bulk discount page" do
     fill_in "Threshold", with: 50
 
     click_button "Add Bulk Discount"
-    save_and_open_page
+    
     expect(page).to have_current_path("/merchants/#{@merchant_1.id}/bulk_discounts/new")
     expect(page).to have_content("Error")
   end
@@ -40,7 +40,7 @@ RSpec.describe "new bulk discount page" do
     fill_in "Threshold", with: 50
 
     click_button "Add Bulk Discount"
-    save_and_open_page
+   
     expect(page).to have_current_path("/merchants/#{@merchant_1.id}/bulk_discounts/new")
     expect(page).to have_content("Error: Discount must be less than 1")
   end
@@ -53,7 +53,7 @@ RSpec.describe "new bulk discount page" do
     fill_in "Threshold", with: 50
 
     click_button "Add Bulk Discount"
-    save_and_open_page
+
     expect(page).to have_current_path("/merchants/#{@merchant_1.id}/bulk_discounts/new")
     expect(page).to have_content("Discount must be greater than 0")
   end
