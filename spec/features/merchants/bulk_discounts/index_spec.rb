@@ -15,12 +15,12 @@ RSpec.describe "Merchant Item Index page" do
 
     visit merchant_bulk_discounts_path(@merchant_1)
 
-    expect(page).to have_content("Dozen")
+    expect(page).to have_link("Dozen")
     expect(page).to have_content("10.0%")
     expect(page).to have_content("30.0%")
     expect(page).to have_content("12")
-    expect(page).to have_content("Baker")
-    expect(page).to have_content("Gross")
+    expect(page).to have_link("Baker")
+    expect(page).to have_link("Gross")
     expect(page).to_not have_content("Nope")
   end
 
