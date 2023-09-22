@@ -2,7 +2,12 @@
 <% @merchant.bulk_discounts.each do |discount| %>
 <%= "#{discount.name} |  
     #{discount.discount * 100}% | 
-    minimum purchase quanity: #{discount.threshold}" %></br>
+    minimum purchase quanity: #{discount.threshold}" %>
+    
+    <%= form_with url: "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete, data: { turbo: false } do |f| %>
+    <%= f.submit "Delete #{discount.name}" %>
+    <%end%>
+    </br>
 <%end%>
 
-<h1><%= link_to 'Create New Discount', new_merchant_bulk_discount_path(@merchant) %></h1>
+<h3><%= link_to 'Create New Discount', new_merchant_bulk_discount_path(@merchant) %></h3>
