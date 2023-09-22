@@ -1,0 +1,14 @@
+<h1> Add Bulk Discount </h1>
+
+<%= form_with url: "/merchants/#{@merchant.id}/bulk_discounts", method: :post, data: { turbo: false } do |f| %>
+
+  <%= f.label :name %></br>
+  <%= f.text_field :name %></br>
+  <%= f.label :discount, "Discount (as decimal)" %></br>
+  <%= f.number_field :discount, step: 0.005 %></br>
+  <%= f.label :threshold  %></br>
+  <%= f.number_field :threshold %></br>
+  <%= f.hidden_field :merchant_id, :value=> @merchant.id %>
+  
+  <%= f.submit "Add Bulk Discount" %>
+  <% end %>
