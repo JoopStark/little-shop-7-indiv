@@ -1,0 +1,7 @@
+<h1> <%= "#{@bulk_discount.merchant.name}'s #{@bulk_discount.name} Discount" %> </h1>
+
+  <%= "Discount: #{@bulk_discount.discount * 100}%"  %></br>
+  <%= "minimum purchase quanity: #{@bulk_discount.threshold}" %>
+  
+  <%= button_to "Edit Discount", edit_merchant_bulk_discount_path(@bulk_discount.merchant, @bulk_discount.id), method: :get %>
+
