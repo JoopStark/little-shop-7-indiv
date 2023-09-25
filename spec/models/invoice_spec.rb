@@ -45,5 +45,22 @@ RSpec.describe Invoice, type: :model do
 
       expect(@invoice_14.total_revenue).to eq(0)
     end
+
+    describe ".with_discounts"
+    it "can create a virtual table with discounts applied to items" do
+      load_best_test_data
+      expect(Invoice.with_discounts(@invoice_15.id)[0].discount_value).to eq(1500)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].merch).to eq(@merchant11.id)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].id).to eq(@invoice_items9.id)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].item_id).to eq(@item11.id)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].unit_price).to eq(500)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].new_price).to eq(6000)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].percentage).to eq(20)
+      expect(Invoice.with_discounts(@invoice_15.id)[0].true_quantity).to eq(15)
+      expect(Invoice.with_discounts(@invoice_15.id)[1].discount_value).to eq(240)
+      expect(Invoice.with_discounts(@invoice_15.id)[2].discount_value).to eq(1200)
+      expect(Invoice.with_discounts(@invoice_15.id)[3].discount_value).to eq(9240)
+      expect(Invoice.with_discounts(@invoice_15.id)[4].discount_value).to eq(0)
+    end
   end
 end
