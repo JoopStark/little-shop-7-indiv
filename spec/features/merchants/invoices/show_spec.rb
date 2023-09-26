@@ -6,7 +6,6 @@ RSpec.describe "Merchant Invoice Show page" do
   end
   it "shows a list of all my items" do 
     visit "merchants/#{@merchant1.id}/invoices/#{@invoice_1.id}"
-    # binding.pry
 
     within "#single_invoice" do 
        expect(page).to have_content(@invoice_1.id)
@@ -25,7 +24,7 @@ RSpec.describe "Merchant Invoice Show page" do
     within "#invoice_items" do 
       expect(page).to have_content(invoice_item.item.name)
        expect(page).to have_content(invoice_item.quantity)
-       expect(page).to have_content("$4.00")
+       expect(page).to have_content("$314.15")
        expect(page).to have_content(invoice_item.status)
     end
   end
@@ -54,7 +53,7 @@ RSpec.describe "Merchant Invoice Show page" do
     expect(page).to have_field('status', with: 'shipped')
   end
 
-  it "can new discounted price" do
+  it "shows new discounted price" do
     load_best_test_data
 
     visit "merchants/#{@merchant2.id}/invoices/#{@invoice_15.id}"
@@ -70,10 +69,26 @@ RSpec.describe "Merchant Invoice Show page" do
     expect(page).to have_content("Total Price(after discount): No discount applied")
   end
 
-  it ""
+  it "if discount is applied it will show the name of the discount in the discount column" do
+    load_best_test_data
 
+    visit "merchants/#{@merchant2.id}/invoices/#{@invoice_15.id}"
 
+    expect(page).to have_content("Jiji's Gross")
+    expect(page).to have_content("Jiji's Dozen")
+    expect(page).to have_content("Jiji's Baker")
+    expect(page).to have_content("No Discount Applied")
+  end
 
+  it "if discount is applied it will show the name of the discount in the discount column" do
+    load_best_test_data
 
+    visit "merchants/#{@merchant2.id}/invoices/#{@invoice_15.id}"
 
+    expect(page).to have_link("Jiji's Gross")
+    
+    click_link "Jiji's Gross"
+
+    expect(current_path).to eq("/merchants/#{@merchant2.id}/bulk_discounts/#{@gross3.id}")
+  end
 end
