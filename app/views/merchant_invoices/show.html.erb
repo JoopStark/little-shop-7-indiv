@@ -3,6 +3,7 @@
   <%= @invoice.status.capitalize %> </br>
   <%= @invoice.formatted_date %></br>
   <%= @invoice.customer.first_name + " " + @invoice.customer.last_name %></br></br>
+  <%= "Total Revenue(after discount): #{Invoice.with_discounts(@invoice.id)}" %>
 </ul>
 
 <table>
@@ -11,6 +12,7 @@
     <th>Quanity</th>
     <th>Price per unit</th>
     <th>Status</th>
+    <th>Applied Discount<th>
   </tr>
 <% @invoice.invoice_items.each do |invoice_item| %>
 <section id="invoice_items">
@@ -28,4 +30,12 @@
   <% end %>
 </table>
 
-<section id="total_revenue"><h2> Total Price: <%=number_to_currency(@invoice.total_revenue/100.0)%> </h2></section>
+<section id="total_revenue"><h2> Total Price: <%=number_to_currency(@invoice.total_revenue/100.0)%> </h2>
+<h2><%= "Total Price(after discount): #{Invoice.with_discounts(@invoice.id)}" %></h2>
+</section>
+
+<% Invoice.applied_discounts(@invoice.id).each do |invoice| %>
+  The <%= link_to invoice.discount_name, "/merchants/#{invoice.merchantid}/bulk_discounts/#{invoice.discount_id}" %> discount was applied </br>
+  <% end %>
+
+

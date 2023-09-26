@@ -6,6 +6,7 @@ RSpec.describe "Merchant Invoice Show page" do
   end
   it "shows a list of all my items" do 
     visit "merchants/#{@merchant1.id}/invoices/#{@invoice_1.id}"
+    # binding.pry
 
     within "#single_invoice" do 
        expect(page).to have_content(@invoice_1.id)
@@ -29,7 +30,7 @@ RSpec.describe "Merchant Invoice Show page" do
     end
   end
 
-  it "can calculate the total_revenue for Merchant Ivoices show page" do
+  it "can calculate the total_revenue for Merchant Invoices show page" do
     load_test_data
 
     visit "merchants/#{@merchant1.id}/invoices/#{@invoice_1.id}"
@@ -42,7 +43,7 @@ RSpec.describe "Merchant Invoice Show page" do
     load_test_data
 
     visit "merchants/#{@merchant1.id}/invoices/#{@invoice_1.id}"
-
+    
     expect(page).to have_field('status', with: 'packaged')
     expect(page).to_not have_field('status', with: 'shipped')
     
@@ -52,4 +53,27 @@ RSpec.describe "Merchant Invoice Show page" do
     expect(page).to_not have_field('status', with: 'pending')
     expect(page).to have_field('status', with: 'shipped')
   end
+
+  it "can new discounted price" do
+    load_best_test_data
+
+    visit "merchants/#{@merchant2.id}/invoices/#{@invoice_15.id}"
+
+    expect(page).to have_content("Total Price(after discount): $365.20")
+  end
+
+  it "will alert user if there are no discounts" do
+    load_test_data
+
+    visit "merchants/#{@merchant1.id}/invoices/#{@invoice_1.id}"
+
+    expect(page).to have_content("Total Price(after discount): No discount applied")
+  end
+
+  it ""
+
+
+
+
+
 end

@@ -1,4 +1,5 @@
 require "rails_helper"
+include ActionView::Helpers::NumberHelper
 
 RSpec.describe Invoice, type: :model do
   describe "relationships" do
@@ -46,21 +47,31 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice_14.total_revenue).to eq(0)
     end
 
-    describe ".with_discounts"
-      it " calculates the cost after discounts" do
+    describe ".with_discounts" do
+      it "calculates the cost after discounts" do
         load_best_test_data
 
-        expect(Invoice.with_discounts(@invoice_15.id)).to eq(36520)
+        expect(Invoice.with_discounts(@invoice_15.id)).to eq("$365.20")
       end
 
-    describe ".applied_discounts" do
+      it "can return 'No discount applied' is there is no discount" do
+        load_test_data
+
+        expect(Invoice.with_discounts(@invoice_1.id)).to eq("No discount applied")
+      end
+    end
+
+    describe ".discount_table" do
       it "returns an array of discount ids applied" do
         load_best_test_data
 
-        expect(Invoice.applied_discounts(@invoice_15.id).length).to eq(4) # 2 different discounts for on merchant and 2 different discount for another merchant
+        expect(Invoice.discount_table(@invoice_15.id).first.item_id).to eq(@item11.id) 
+        expect(Invoice.discount_table(@invoice_15.id).first.true_quantity).to eq(15) 
+        expect(Invoice.discount_table(@invoice_15.id).first.unit_price).to eq(500) 
+        expect(Invoice.discount_table(@invoice_15.id).first.status_min).to eq(0) 
+        expect(Invoice.discount_table(@invoice_15.id).first.discount_id).to eq(@baker3.id) 
+        expect(Invoice.discount_table(@invoice_15.id).first.discount_name).to eq(@baker3.name) 
 
-        expect(Invoice.applied_discounts(@invoice_16.id).length).to eq(1) # has one discount and did not apply lesser bulk discounts
-        expect(Invoice.applied_discounts(@invoice_16.id).first.discount_id).to eq(@gross1.id) # double checking it is the right single discount
       end
     end
 
