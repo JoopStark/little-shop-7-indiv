@@ -81,7 +81,7 @@ class Invoice < ApplicationRecord
           GROUP BY invoice_items.item_id, invoice_items.invoice_id, invoice_items.unit_price) consolidated_invoice_items ON consolidated_invoice_items.invoice_id = invoices.id
         INNER JOIN items ON items.id = consolidated_invoice_items.item_id 
         INNER JOIN merchants ON merchants.id = items.merchant_id
-           INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id) AS tablea
+           LEFT JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id) AS tablea
            ORDER BY item_id, percentage DESC;", invoice_id]
            )
     end
