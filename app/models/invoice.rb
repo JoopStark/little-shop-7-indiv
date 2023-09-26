@@ -28,7 +28,8 @@ class Invoice < ApplicationRecord
 
   def self.with_discounts(invoice_id)
     find_by_sql(
-      ["SELECT DISTINCT invoice, merch, id, item_id, unit_price, MAX(discount_value) AS discount_value, MIN(new_price) AS new_price, MAX(percentage) AS percentage, true_quantity FROM
+      ["SELECT invoice, SUM(unit_price * true_quantity) AS before_revenue, SUM(new_price) AS discounted_revenue FROM   	
+        (SELECT DISTINCT invoice, merch, id, item_id, unit_price, MAX(discount_value) AS discount_value, MIN(new_price) AS new_price, MAX(percentage) AS percentage, true_quantity FROM
           (SELECT invoices.id AS invoice, merchants.id AS merch, consolidated_invoice_items.id, consolidated_invoice_items.invoice_id, consolidated_invoice_items.item_id, consolidated_invoice_items.unit_price, items.name, true_quantity,
             CASE WHEN consolidated_invoice_items.true_quantity >= bulk_discounts.threshold THEN consolidated_invoice_items.true_quantity * consolidated_invoice_items.unit_price * bulk_discounts.discount
             ELSE 0
@@ -46,8 +47,32 @@ class Invoice < ApplicationRecord
             GROUP BY invoice_items.item_id, invoice_items.invoice_id, invoice_items.unit_price) consolidated_invoice_items ON consolidated_invoice_items.invoice_id = invoices.id
           INNER JOIN items ON items.id = consolidated_invoice_items.item_id 
           INNER JOIN merchants ON merchants.id = items.merchant_id
-          INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id) AS tablea
-       GROUP BY invoice, merch, id, item_id, unit_price, name, true_quantity
-       ORDER BY item_id;", invoice_id])
+        INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id) AS tablea
+        GROUP BY invoice, merch, id, item_id, unit_price, name, true_quantity) AS tableb
+      GROUP BY invoice;", invoice_id]
+    )[0].discounted_revenue
+  end
+
+  def self.applied_discounts(invoice_id)
+    find_by_sql(
+      ["SELECT DISTINCT ON (item_id) discount_id FROM
+        (SELECT invoices.id AS invoice, consolidated_invoice_items.id, consolidated_invoice_items.invoice_id, consolidated_invoice_items.item_id, items.name, true_quantity,
+            CASE WHEN consolidated_invoice_items.true_quantity >= bulk_discounts.threshold THEN discount * 100
+            ELSE 0
+            END percentage,
+            CASE WHEN consolidated_invoice_items.true_quantity >= bulk_discounts.threshold THEN bulk_discounts.id
+            ELSE 0
+            END discount_id	
+          FROM invoices
+          INNER JOIN 
+            (SELECT item_id, MAX(id) AS id, invoice_id, SUM(quantity) AS true_quantity FROM invoice_items
+            WHERE invoice_id = ?
+            GROUP BY invoice_items.item_id, invoice_items.invoice_id, invoice_items.unit_price) consolidated_invoice_items ON consolidated_invoice_items.invoice_id = invoices.id
+          INNER JOIN items ON items.id = consolidated_invoice_items.item_id 
+          INNER JOIN merchants ON merchants.id = items.merchant_id
+        INNER JOIN bulk_discounts ON bulk_discounts.merchant_id = merchants.id) AS tablea
+      WHERE percentage != 0
+      ORDER BY item_id, percentage DESC;", invoice_id]
+    )
   end
 end
