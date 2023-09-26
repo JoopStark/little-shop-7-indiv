@@ -47,20 +47,28 @@ RSpec.describe Invoice, type: :model do
     end
 
     describe ".with_discounts"
-    it "can create a virtual table with discounts applied to items" do
-      load_best_test_data
-      expect(Invoice.with_discounts(@invoice_15.id)[0].discount_value).to eq(1500)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].merch).to eq(@merchant11.id)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].id).to eq(@invoice_items9.id)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].item_id).to eq(@item11.id)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].unit_price).to eq(500)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].new_price).to eq(6000)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].percentage).to eq(20)
-      expect(Invoice.with_discounts(@invoice_15.id)[0].true_quantity).to eq(15)
-      expect(Invoice.with_discounts(@invoice_15.id)[1].discount_value).to eq(240)
-      expect(Invoice.with_discounts(@invoice_15.id)[2].discount_value).to eq(1200)
-      expect(Invoice.with_discounts(@invoice_15.id)[3].discount_value).to eq(9240)
-      expect(Invoice.with_discounts(@invoice_15.id)[4].discount_value).to eq(0)
+      it " calculates the cost after discounts" do
+        load_best_test_data
+
+        expect(Invoice.with_discounts(@invoice_15.id)).to eq(36520)
+      end
+
+    describe ".applied_discounts" do
+      it "returns an array of discount ids applied" do
+        load_best_test_data
+
+        expect(Invoice.applied_discounts(@invoice_15.id).length).to eq(4) # 2 different discounts for on merchant and 2 different discount for another merchant
+
+        expect(Invoice.applied_discounts(@invoice_16.id).length).to eq(1) # has one discount and did not apply lesser bulk discounts
+        expect(Invoice.applied_discounts(@invoice_16.id).first.discount_id).to eq(@gross1.id) # double checking it is the right single discount
+      end
     end
+
+
+
+
+
+
+
   end
 end

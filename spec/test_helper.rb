@@ -202,6 +202,7 @@ def load_best_test_data
   @invoice_13 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
   @invoice_14 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
   @invoice_15 = Invoice.create!(status: "completed", customer: @customer_2, updated_at: "2023-03-27 14:54:09 UTC")
+  @invoice_16 = Invoice.create!(status: "completed", customer: @customer_2, updated_at: "2023-03-27 14:54:09 UTC")
 
   @item1 = Item.create!(name: "Colgate", description: "toothpaste", unit_price: 400, merchant: @merchant1) 
   @item2 = Item.create!(name: "Red Bell Pepper", description: "Vegetable", unit_price: 200, merchant: @merchant2) 
@@ -234,6 +235,7 @@ def load_best_test_data
   @invoice_items12 = InvoiceItem.create!(quantity: 10, unit_price: 10, status: "shipped", item: @item1, invoice: @invoice_11 )
   @invoice_items13 = InvoiceItem.create!(quantity: 10, unit_price: 9, status: "shipped", item: @item8, invoice: @invoice_12 )
   @invoice_items14 = InvoiceItem.create!(quantity: 10, unit_price: 8, status: "shipped", item: @item10, invoice: @invoice_13 )
+  @invoice_items15 = InvoiceItem.create!(quantity: 200, unit_price: 8, status: "shipped", item: @item1, invoice: @invoice_16 )
 
   @invoice_items8 = InvoiceItem.create!(quantity: 7, unit_price: 500, status: "shipped", item: @item11, invoice: @invoice_15 )
   @invoice_items9 = InvoiceItem.create!(quantity: 8, unit_price: 500, status: "pending", item: @item11, invoice: @invoice_15 ) 
