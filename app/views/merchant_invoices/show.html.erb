@@ -3,6 +3,7 @@
   <%= @invoice.status.capitalize %> </br>
   <%= @invoice.formatted_date %></br>
   <%= @invoice.customer.first_name + " " + @invoice.customer.last_name %></br></br>
+  <%= "Total Revenue(after discount): #{Invoice.with_discounts(@invoice.id)}" %>
 </ul>
 
 <table>
@@ -11,16 +12,23 @@
     <th>Quanity</th>
     <th>Price per unit</th>
     <th>Status</th>
+    <th>Applied Discount<th>
+    <th>Change Status<th>
   </tr>
-<% @invoice.invoice_items.each do |invoice_item| %>
+<% Invoice.discount_table(@invoice.id).each do |invoice| %>
 <section id="invoice_items">
   <tr>
-    <td><%= invoice_item.item.name %></td>
-    <td><%= invoice_item.quantity %></td>
-    <td><%= number_to_currency(invoice_item.item.unit_price/100.0) %></td>
-    <td><%= invoice_item.status %></td>
-    <%= form_with url: "/merchants/#{params[:merchant_id]}/invoices/#{@invoice.id}?in_item_id=#{invoice_item.id}", method: :patch, data: { turbo: false } do |f| %>
-    Current Status: <%= f.select :status, options_for_select(["pending", "packaged", "shipped"], selected: invoice_item.status) %><br>
+    <td><%= Item.find(invoice.item_id).name %></td>
+    <td><%= invoice.true_quantity %></td>
+    <td><%= number_to_currency(invoice.unit_price/100.0) %></td>
+    <td><%= ["pending", "packaged", "shipped"][invoice.status_min] %></td>
+    <td><%= if invoice.percentage == 0 
+                "No Discount Applied"
+            else  
+              link_to invoice.discount_name, "/merchants/#{params[:merchant_id]}/bulk_discounts/#{invoice.discount_id}"
+            end %></td>
+    <td><%= form_with url: "/merchants/#{params[:merchant_id]}/invoices/#{@invoice.id}?in_item_id=#{invoice.id}", method: :patch, data: { turbo: false } do |f| %>
+    Current Status: <%= f.select :status, options_for_select(["pending", "packaged", "shipped"], selected: ["pending", "packaged", "shipped"][invoice.status_min]) %><br>
     <%= f.submit "Update Item Status" %>
     <%end%>
   </tr>
@@ -28,4 +36,9 @@
   <% end %>
 </table>
 
-<section id="total_revenue"><h2> Total Price: <%=number_to_currency(@invoice.total_revenue/100.0)%> </h2></section>
+<section id="total_revenue"><h2> Total Price: <%=number_to_currency(@invoice.total_revenue/100.0)%> </h2>
+<h2><%= "Total Price(after discount): #{Invoice.with_discounts(@invoice.id)}" %></h2>
+</section>
+
+
+

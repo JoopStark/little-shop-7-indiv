@@ -182,8 +182,10 @@ def load_best_test_data
   @merchant8= Merchant.create!(name: "Haku")
   @merchant9= Merchant.create!(name: "Chihiro")
   @merchant10= Merchant.create!(name: "Mononoke")
+  @merchant11= Merchant.create!(name: "Jiji")
 
   @customer_1 = Customer.create!(first_name: "Frodo", last_name: "Baggins")
+  @customer_2 = Customer.create!(first_name: "Samwise", last_name: "Gamgee")
 
   @invoice_1 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
   @invoice_2 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
@@ -199,6 +201,8 @@ def load_best_test_data
   @invoice_12 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
   @invoice_13 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
   @invoice_14 = Invoice.create!(status: "completed", customer: @customer_1, updated_at: "2023-03-27 14:54:09 UTC")
+  @invoice_15 = Invoice.create!(status: "completed", customer: @customer_2, updated_at: "2023-03-27 14:54:09 UTC")
+  @invoice_16 = Invoice.create!(status: "completed", customer: @customer_2, updated_at: "2023-03-27 14:54:09 UTC")
 
   @item1 = Item.create!(name: "Colgate", description: "toothpaste", unit_price: 400, merchant: @merchant1) 
   @item2 = Item.create!(name: "Red Bell Pepper", description: "Vegetable", unit_price: 200, merchant: @merchant2) 
@@ -210,6 +214,11 @@ def load_best_test_data
   @item8 = Item.create!(name: "Colgate", description: "toothpaste", unit_price: 400, merchant: @merchant8) 
   @item9 = Item.create!(name: "Red Bell Pepper", description: "Vegetable", unit_price: 200, merchant: @merchant9) 
   @item10 = Item.create!(name: "Huskies", description: "dog food", unit_price: 2000, merchant: @merchant10) 
+  @item11 = Item.create!(name: "Chicken Breast", description: "meat", unit_price: 500, merchant: @merchant11) 
+  @item12 = Item.create!(name: "Green tea", description: "drink", unit_price: 200, merchant: @merchant11) 
+  @item13 = Item.create!(name: "Colgate", description: "toothpaste", unit_price: 400, merchant: @merchant11) 
+  @item14 = Item.create!(name: "Red Bell Pepper", description: "Vegetable", unit_price: 200, merchant: @merchant11) 
+  @item15 = Item.create!(name: "Huskies", description: "dog food", unit_price: 2000, merchant: @merchant11) 
   
 
   @invoice_items1 = InvoiceItem.create!(quantity: 10, unit_price: 10, status: "pending", item: @item2, invoice: @invoice_1 )
@@ -226,6 +235,15 @@ def load_best_test_data
   @invoice_items12 = InvoiceItem.create!(quantity: 10, unit_price: 10, status: "shipped", item: @item1, invoice: @invoice_11 )
   @invoice_items13 = InvoiceItem.create!(quantity: 10, unit_price: 9, status: "shipped", item: @item8, invoice: @invoice_12 )
   @invoice_items14 = InvoiceItem.create!(quantity: 10, unit_price: 8, status: "shipped", item: @item10, invoice: @invoice_13 )
+  @invoice_items15 = InvoiceItem.create!(quantity: 200, unit_price: 8, status: "shipped", item: @item1, invoice: @invoice_16 )
+
+  @invoice_items8 = InvoiceItem.create!(quantity: 7, unit_price: 500, status: "shipped", item: @item11, invoice: @invoice_15 )
+  @invoice_items9 = InvoiceItem.create!(quantity: 8, unit_price: 500, status: "pending", item: @item11, invoice: @invoice_15 ) 
+  @invoice_items10 = InvoiceItem.create!(quantity: 12, unit_price: 200, status: "shipped", item: @item12, invoice: @invoice_15 )
+  @invoice_items11 = InvoiceItem.create!(quantity: 15, unit_price: 400, status: "shipped", item: @item13, invoice: @invoice_15 )
+  @invoice_items12 = InvoiceItem.create!(quantity: 10, unit_price: 200, status: "shipped", item: @item14, invoice: @invoice_15 )
+  @invoice_items13 = InvoiceItem.create!(quantity: 144, unit_price: 200, status: "shipped", item: @item14, invoice: @invoice_15 )
+  @invoice_items14 = InvoiceItem.create!(quantity: 1, unit_price: 2000, status: "shipped", item: @item15, invoice: @invoice_15 )
 
   @transaction_1 = Transaction.create!(invoice: @invoice_1, credit_card_number: "234567890102", credit_card_expiration_date: "02/24", result: "success")
   @transaction_2 = Transaction.create!(invoice: @invoice_2, credit_card_number: "234567890102", credit_card_expiration_date: "02/24", result: "success")
@@ -240,4 +258,19 @@ def load_best_test_data
   @transaction_11 = Transaction.create!(invoice: @invoice_11, credit_card_number: "234567890102", credit_card_expiration_date: "02/24", result: "success")
   @transaction_12 = Transaction.create!(invoice: @invoice_12, credit_card_number: "234567890102", credit_card_expiration_date: "02/24", result: "success")
   @transaction_13 = Transaction.create!(invoice: @invoice_13, credit_card_number: "234567890102", credit_card_expiration_date: "02/24", result: "success")
+
+
+  @half_dozen1 = BulkDiscount.create!(name: "No Face's Half Dozen", discount: 0.10, threshold: 6, merchant: @merchant1)
+  @baker1 = BulkDiscount.create!(name: "No Face's Baker", discount: 0.20, threshold: 13, merchant: @merchant1)
+  @gross1 = BulkDiscount.create!(name: "No Face's Gross", discount: 0.30, threshold: 144, merchant: @merchant1)
+  @nope1 = BulkDiscount.create!(name: "No Face's Nope", discount: 0.99, threshold: 999, merchant: @merchant1)
+  @dozen2 = BulkDiscount.create!(name: "Totoro's Dozen", discount: 0.10, threshold: 12, merchant: @merchant2)
+  @half_dozen1 = BulkDiscount.create!(name: "Totoro's Half Dozen", discount: 0.10, threshold: 6, merchant: @merchant2)
+  @baker2 = BulkDiscount.create!(name: "Totoro's Baker", discount: 0.20, threshold: 13, merchant: @merchant2)
+  @gross2 = BulkDiscount.create!(name: "Totoro's Gross", discount: 0.30, threshold: 144, merchant: @merchant2)
+  @nope2 = BulkDiscount.create!(name: "Totoro's Nope", discount: 0.99, threshold: 999, merchant: @merchant2)
+  @dozen3 = BulkDiscount.create!(name: "Jiji's Dozen", discount: 0.10, threshold: 12, merchant: @merchant11)
+  @baker3 = BulkDiscount.create!(name: "Jiji's Baker", discount: 0.20, threshold: 13, merchant: @merchant11)
+  @gross3 = BulkDiscount.create!(name: "Jiji's Gross", discount: 0.30, threshold: 144, merchant: @merchant11)
+  @nope3 = BulkDiscount.create!(name: "Jiji's Nope", discount: 0.99, threshold: 999, merchant: @merchant11)
 end 
