@@ -68,4 +68,20 @@ RSpec.describe "the invoice show" do
     expect(page).to have_content("Admin: Invoice Section")
   end
 
+  it "shows revenue after discount" do 
+    load_best_test_data
+
+    visit admin_invoice_path(@invoice_15)
+
+    expect(page).to have_content("Total Revenue (after discounts): $365.20")
+  end
+
+  it "shows string if no discount" do 
+    load_test_data
+
+    visit admin_invoice_path(@invoice_1a)
+
+    expect(page).to have_content("Total Revenue (after discounts): No discount applied")
+  end
+
 end
