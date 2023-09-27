@@ -26,4 +26,5 @@ Current Status: <%= f.select :status, options_for_select(["completed", "cancelle
   <% end %>
 </table>
 
-<section id="total_revenue"><h3> Total Price: <%=number_to_currency(@invoice.total_revenue/100.0)%> </h3></section>
+<section id="total_revenue"><h3> Total Revenue (before discounts): <%=number_to_currency(@invoice.total_revenue/100.0)%> </h3></section>
+<section id="total_revenue_ad"><h3> Total Revenue (after discounts): <%= Invoice.with_discounts(@invoice.id) %> </h3></section>
