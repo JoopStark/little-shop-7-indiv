@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "the merchant show" do
-  xdescribe "group" do
+  describe "group" do
     it "shows the merchants name" do
       merchant_1 = Merchant.create(name: "Bob Burger")
 
